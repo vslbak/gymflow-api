@@ -29,6 +29,6 @@ jwt:
   refresh-expiration-ms: 604800000   # 7 days
 
 stripe:
-  secret: ${STRIPE_API_KEY:sk_test_changeme}
+  secret: ${STRIPE_SECRET_KEY:sk_test_changeme}
   webhook:
     secret: ${STRIPE_WEBHOOK_SECRET:whsec_changeme}
