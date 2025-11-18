@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +25,9 @@ import java.util.UUID;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
+
+    @Value("${gymflow.registration.enabled:false}")
+    private boolean registrationEnabled;
 
     private final UserService userService;
     private final AuthenticationManager authManager;
@@ -46,6 +50,9 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<Void> register(@RequestBody @Valid RegistrationRequest request) {
+        if (!registrationEnabled) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Registration is disabled");
+        }
 
         if (userService.findByUsername(request.username()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already in use");

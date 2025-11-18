@@ -33,7 +33,7 @@ public class StripePaymentService {
     @Value("${stripe.webhook.secret}")
     private String stripeWebhookSecret;
 
-    public Session createCheckoutSession(UUID bookingId, String className, BigDecimal amount) throws StripeException {
+    public Session createCheckoutSession(UUID bookingId, String className, BigDecimal amount) {
 
         Map<String, String> meta = new HashMap<>();
         meta.put("bookingId", bookingId.toString());
@@ -67,7 +67,12 @@ public class StripePaymentService {
                         )
                         .build();
 
-        return Session.create(params);
+        try {
+            return Session.create(params);
+        } catch (StripeException ex) {
+            log.error("Error creating Stripe checkout session: {}", ex.getMessage());
+            throw new IllegalStateException("Failed to create Stripe checkout session", ex);
+        }
     }
     public Optional<PaymentResponse> handleWebhookEvent(String payload, String sigHeader) throws  StripeException {
 

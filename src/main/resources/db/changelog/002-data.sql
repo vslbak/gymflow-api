@@ -1,8 +1,8 @@
 -- Seed admin user
 INSERT INTO gymflow_user (email, username, phone, password, role)
-VALUES ('admin@gymflow.local','admin','1234567890',
-'$2a$10$xjAan5repGpHU0/epnpTau2OZ4pvWPy1arvHIwOz4L4HlaVrqsOIa', -- << admin123
-'ADMIN')
+VALUES ('user@gymflow.demo','JohnDoe','1234567890',
+'$2a$10$9if2RjN5vfZZ0NqmSngReeJCGj6rfKuTXtWQsgiLhDL97PmF4xLlG', -- << user123
+'USER')
 ON CONFLICT (email) DO NOTHING;
 
 -- === Gymflow Classes Seed===
