@@ -51,6 +51,7 @@ class AuthIntegrationTest {
         r.add("spring.datasource.username", postgres::getUsername);
         r.add("spring.datasource.password", postgres::getPassword);
         r.add("spring.liquibase.enabled", () -> true);
+        r.add("gymflow.registration.enabled", () -> true);
     }
 
     @BeforeEach
