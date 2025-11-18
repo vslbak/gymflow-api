@@ -1,17 +1,20 @@
 {
-    email your-email@example.com
+    email vbakosis@gmail.com
 }
 
 gymflow.codebshift.dev {
+
     encode gzip
 
-    @api {
-        path /api/* /stripe/webhook
+    handle_path /api/* {
+        reverse_proxy api:8080
     }
 
-    # Backend (Spring Boot) – all /api/** and /stripe/webhook
-    reverse_proxy @api api:8080
+    handle /stripe/webhook {
+        reverse_proxy api:8080
+    }
 
-    # Frontend – everything else
-    reverse_proxy web:80
+    handle {
+        reverse_proxy web:80
+    }
 }

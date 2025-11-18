@@ -29,5 +29,5 @@ jobs:
 
       - name: Build and push
         run: |
-          docker build . -t codebshift/gymflow:core
-          docker push codebshift/gymflow:core
+          docker build . -t vslmpak/gymflow:core
+          docker push vslmpak/gymflow:core
