@@ -3,7 +3,6 @@ version: "3.9"
 services:
   postgres:
     image: postgres:16
-    container_name: gymflow-postgres
     restart: unless-stopped
     environment:
       POSTGRES_DB: gymflow
@@ -16,7 +15,6 @@ services:
 
   api:
     image: vslmpak/gymflow:api
-    container_name: gymflow-api
     restart: unless-stopped
     depends_on:
       - postgres
@@ -36,7 +34,6 @@ services:
 
   web:
     image: vslmpak/gymflow:web
-    container_name: gymflow-web
     restart: unless-stopped
     # If your web image is an nginx serving static assets:
     expose:

@@ -5,8 +5,8 @@ spring:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.yaml
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/gymflow}
-    username: ${SPRING_DATASOURCE_USERNAME:gymflow}
+    url: jdbc:postgresql://postgres:5432/gymflow
+    username: gymflow
     password: ${SPRING_DATASOURCE_PASSWORD:gymflow}
     driver-class-name: org.postgresql.Driver
 
