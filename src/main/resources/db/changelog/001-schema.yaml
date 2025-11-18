@@ -1,0 +1,259 @@
+databaseChangeLog:
+
+  # ========== 001: Enable UUIDs ==========
+  - changeSet:
+      id: 001-enable-uuid
+      author: vassilis
+      changes:
+        - sql:
+            splitStatements: false
+            sql: |
+              CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+
+  # ========== 002: gymflow_user ==========
+  - changeSet:
+      id: 002-create-gymflow-user
+      author: vassilis
+      changes:
+        - createTable:
+            tableName: gymflow_user
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: username
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: phone
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: role
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+
+        - addUniqueConstraint:
+            tableName: gymflow_user
+            columnNames: email
+            constraintName: uq_user_email
+
+        - addUniqueConstraint:
+            tableName: gymflow_user
+            columnNames: username
+            constraintName: uq_user_username
+
+
+  # ========== 003: gymflow_class ==========
+  - changeSet:
+      id: 003-create-gymflow-class
+      author: vassilis
+      changes:
+        - createTable:
+            tableName: gymflow_class
+            columns:
+
+              - column:
+                  name: id
+                  type: UUID
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: instructor
+                  type: VARCHAR(255)
+
+              - column:
+                  name: duration
+                  type: INTERVAL
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: total_spots
+                  type: INT
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: image_url
+                  type: TEXT
+
+              - column:
+                  name: category
+                  type: VARCHAR(100)
+
+              - column:
+                  name: level
+                  type: VARCHAR(100)
+
+              - column:
+                  name: location
+                  type: VARCHAR(255)
+
+              - column:
+                  name: description
+                  type: TEXT
+
+              - column:
+                  name: price
+                  type: "NUMERIC(10,2)"
+
+              - column:
+                  name: what_to_bring
+                  type: JSONB
+
+              - column:
+                  name: days
+                  type: JSONB
+
+              - column:
+                  name: class_time
+                  type: TIME
+                  constraints:
+                    nullable: false
+
+
+  # ========== 004: class_session ==========
+  - changeSet:
+      id: 004-create-class-session
+      author: vassilis
+      changes:
+        - createTable:
+            tableName: class_session
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: gymflow_class_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: date
+                  type: DATE
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: spots_left
+                  type: INT
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: class_session
+            baseColumnNames: gymflow_class_id
+            constraintName: fk_class_session_class
+            referencedTableName: gymflow_class
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+
+  # ========== 005: gymflow_booking ==========
+  - changeSet:
+      id: 005-create-gymflow-booking
+      author: vassilis
+      changes:
+        - createTable:
+            tableName: gymflow_booking
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: class_session_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: gymflow_user_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: stripe_session_id
+                  type: VARCHAR(255)
+
+              - column:
+                  name: stripe_payment_intent_id
+                  type: VARCHAR(255)
+
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: confirmed_at
+                  type: TIMESTAMP
+
+        - addForeignKeyConstraint:
+            baseTableName: gymflow_booking
+            baseColumnNames: class_session_id
+            referencedTableName: class_session
+            referencedColumnNames: id
+            onDelete: CASCADE
+            constraintName: fk_booking_session
+
+        - addForeignKeyConstraint:
+            baseTableName: gymflow_booking
+            baseColumnNames: gymflow_user_id
+            referencedTableName: gymflow_user
+            referencedColumnNames: id
+            onDelete: CASCADE
+            constraintName: fk_booking_user

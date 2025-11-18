@@ -1,0 +1,68 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: gymflow-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: gymflow
+      POSTGRES_USER: gymflow
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - gymflow_pgdata:/var/lib/postgresql/data
+    networks:
+      - gymflow-net
+
+  api:
+    image: codebshift/gymflow:api
+    container_name: gymflow-api
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/gymflow
+      SPRING_DATASOURCE_USERNAME: gymflow
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+      FRONTEND_BASE: https://gymflow.codebshift.dev
+      SERVER_PORT: 8080
+    networks:
+      - gymflow-net
+
+  web:
+    image: codebshift/gymflow:web
+    container_name: gymflow-web
+    restart: unless-stopped
+    # If your web image is an nginx serving static assets:
+    expose:
+      - "80"
+    networks:
+      - gymflow-net
+
+  caddy:
+    image: caddy:2
+    container_name: gymflow-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - gymflow-net
+
+networks:
+  gymflow-net:
+    driver: bridge
+
+volumes:
+  gymflow_pgdata:
+  caddy_data:
+  caddy_config:

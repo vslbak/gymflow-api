@@ -1,0 +1,43 @@
+# === Java / Maven ===
+target/
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/timing.properties
+*.class
+*.log
+
+# === IntelliJ / JetBrains ===
+.idea/
+*.iml
+out/
+*.iws
+*.ipr
+
+# === OS junk ===
+.DS_Store
+Thumbs.db
+
+# === Environment / credentials ===
+*.env
+*.env.local
+application-*.yml
+!application.yml  # keep base config tracked
+
+# === Docker ===
+/docker-compose.override.yml
+/.docker/
+*.pid
+
+# === Test output ===
+surefire-reports/
+failsafe-reports/
+
+# === Logs / temp ===
+logs/
+*.log
+*.tmp
+*.bak
+
+# === Misc ===
+node_modules/
+
+deploy/.env

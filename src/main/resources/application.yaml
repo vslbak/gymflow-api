@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: gymflow-api
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/gymflow}
+    username: ${SPRING_DATASOURCE_USERNAME:gymflow}
+    password: ${SPRING_DATASOURCE_PASSWORD:gymflow}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+      hibernate.format_sql: true
+
+frontend:
+  base:
+    url: ${FRONTEND_BASE:http://localhost:3000}
+
+logging:
+  level:
+    root: INFO
+
+jwt:
+  secret: ${JWT_SECRET:LwG8t1DxFJj9Yv1Yl1d5jZp6zB2Vx1J2LqJgZKp1YVw=} # randomly generated, new in production
+  expiration-ms: 900000              # 15 min
+  refresh-expiration-ms: 604800000   # 7 days
+
+stripe:
+  secret: ${STRIPE_API_KEY:sk_test_changeme}
+  webhook:
+    secret: ${STRIPE_WEBHOOK_SECRET:whsec_changeme}
