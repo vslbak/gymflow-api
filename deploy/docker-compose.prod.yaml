@@ -15,7 +15,7 @@ services:
       - gymflow-net
 
   api:
-    image: codebshift/gymflow:api
+    image: vslmpak/gymflow:api
     container_name: gymflow-api
     restart: unless-stopped
     depends_on:
@@ -35,7 +35,7 @@ services:
       - gymflow-net
 
   web:
-    image: codebshift/gymflow:web
+    image: vslmpak/gymflow:web
     container_name: gymflow-web
     restart: unless-stopped
     # If your web image is an nginx serving static assets:
