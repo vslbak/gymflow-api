@@ -20,9 +20,6 @@ public class JwtService {
     @Value("${jwt.expiration-ms}")
     private long accessExpirationMs;
 
-    @Value("${jwt.refresh-expiration-ms}")
-    private long refreshExpirationMs;
-
     private Key key() {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
